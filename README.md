@@ -2,6 +2,7 @@
 
 A modern, accessible, and responsive profile card built with semantic HTML, CSS, and vanilla JavaScript. This project demonstrates best practices in frontend development with a focus on testability and accessibility.
 
+Live Link here: (https://adenijiridwan43.github.io/WizardProfile/)
 ---
 
 ## 📋 Table of Contents
