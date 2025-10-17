@@ -77,8 +77,8 @@ profile-card/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/profile-card.git
-   cd profile-card
+   git clone https://github.com/adenijiridwan43/WizardProfile.git
+   cd WizardProfile
    ```
 
 2. **Open in browser**
