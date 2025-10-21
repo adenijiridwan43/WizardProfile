@@ -10,20 +10,17 @@ function updateTime() {
   }
 }
 
-/**
- * Initialize the time display when DOM is ready
- */
 function initializeTime() {
   // Set initial time immediately
   updateTime();
   
-  // Update time every second (1000ms)
   setInterval(updateTime, 1000);
 }
 
-// Run initialization immediately
+// Run Time immediately
 initializeTime();
 
+// Helper function to format timestamp
 function formatTimestamp(milliseconds) {
   const date = new Date(milliseconds);
   return {
