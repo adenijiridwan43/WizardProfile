@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const subjectInput = document.querySelector('[data-testid="test-contact-subject"]');
   const messageInput = document.querySelector('[data-testid="test-contact-message"]');
   const successMessage = document.querySelector('[data-testid="test-contact-success"]');
-  const submitButton = document.querySelector('[data-testid="test-contact-submit"]');
 
   // Get error message elements
   const nameError = document.getElementById('nameError');
@@ -25,8 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('All form elements found successfully');
 
   // Check if we returned from a successful Formspree submission
-  if (window.location.hash === '#success') {
-    console.log('Detected successful form submission from hash');
+  // Check both hash and localStorage for maximum reliability
+  if (window.location.hash === '#success' || sessionStorage.getItem('formJustSubmitted') === 'true') {
+    console.log('Detected successful form submission');
+    
+    // Clear the session flag
+    sessionStorage.removeItem('formJustSubmitted');
     
     // Clear the form immediately
     form.reset();
@@ -41,9 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
     showSuccessMessage();
     
     // Clean up the URL hash without reloading the page
-    window.history.replaceState({}, document.title, window.location.pathname);
+    if (window.location.hash === '#success') {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
     
-    // Reset everything after 5 seconds (hide success, show form again)
+    // Reset everything after 5 seconds (5000 milliseconds = 5 seconds!)
     setTimeout(function() {
       if (successMessage) {
         successMessage.style.display = 'none';
@@ -51,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (form) {
         form.style.display = 'block';
       }
-    }, 50);
+    }, 5000);
   }
 
   /**
@@ -221,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clearError(messageError, messageInput);
   }
 
-  // Real-time validation on blur
+  // validation on blur
   nameInput.addEventListener('blur', function() {
     validateField(nameInput, nameError, validateName);
   });
@@ -299,11 +304,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // All validations passed - let Formspree handle the submission naturally
-    //console.log('All validations passed! Submitting to Formspree...');
+    console.log('All validations passed! Submitting to Formspree...');
+    
+    // Set a flag so we know the form was submitted (survives page reload)
+    sessionStorage.setItem('formJustSubmitted', 'true');
     
     // Let the form submit normally (with reCAPTCHA)
     form.submit();
   });
 
-  //console.log('Form event listeners attached successfully');
+  console.log('Form event listeners attached successfully');
 });
