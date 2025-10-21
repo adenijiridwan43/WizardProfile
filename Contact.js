@@ -299,11 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // All validations passed - let Formspree handle the submission naturally
-    console.log('All validations passed! Submitting to Formspree...');
+    //console.log('All validations passed! Submitting to Formspree...');
     
     // Let the form submit normally (with reCAPTCHA)
     form.submit();
   });
 
-  console.log('Form event listeners attached successfully');
+  //console.log('Form event listeners attached successfully');
 });
