@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const subjectInput = document.querySelector('[data-testid="test-contact-subject"]');
   const messageInput = document.querySelector('[data-testid="test-contact-message"]');
   const successMessage = document.querySelector('[data-testid="test-contact-success"]');
+  const submitButton = document.querySelector('[data-testid="test-contact-submit"]');
 
   // Get error message elements
   const nameError = document.getElementById('nameError');
@@ -22,6 +23,36 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   console.log('All form elements found successfully');
+
+  // Check if we returned from a successful Formspree submission
+  if (window.location.hash === '#success') {
+    console.log('Detected successful form submission from hash');
+    
+    // Clear the form immediately
+    form.reset();
+    
+    // Clear all error messages
+    clearError(nameError, nameInput);
+    clearError(emailError, emailInput);
+    clearError(subjectError, subjectInput);
+    clearError(messageError, messageInput);
+    
+    // Show success message
+    showSuccessMessage();
+    
+    // Clean up the URL hash without reloading the page
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // Reset everything after 5 seconds (hide success, show form again)
+    setTimeout(function() {
+      if (successMessage) {
+        successMessage.style.display = 'none';
+      }
+      if (form) {
+        form.style.display = 'block';
+      }
+    }, 50);
+  }
 
   /**
    * Validates full name field
@@ -251,24 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Check if all fields are valid
-    if (isNameValid && isEmailValid && isSubjectValid && isMessageValid) {
-      // All validations passed
-      console.log('All validations passed!');
-      console.log('Form data:', {
-        name: nameInput.value,
-        email: emailInput.value,
-        subject: subjectInput.value,
-        message: messageInput.value
-      });
-      
-      // Show success message
-      showSuccessMessage();
-      
-      // Reset form after 5 seconds
-      setTimeout(function() {
-        resetForm();
-      }, 5000);
-    } else {
+    if (!isNameValid || !isEmailValid || !isSubjectValid || !isMessageValid) {
       console.log('Validation failed');
       
       // Focus on first invalid field
@@ -281,7 +295,14 @@ document.addEventListener('DOMContentLoaded', function() {
       } else if (!isMessageValid) {
         messageInput.focus();
       }
+      return;
     }
+
+    // All validations passed - let Formspree handle the submission naturally
+    console.log('All validations passed! Submitting to Formspree...');
+    
+    // Let the form submit normally (with reCAPTCHA)
+    form.submit();
   });
 
   console.log('Form event listeners attached successfully');
